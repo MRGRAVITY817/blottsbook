@@ -1,3 +1,4 @@
+(ns fp)
 
 ;; Functions as values
 
