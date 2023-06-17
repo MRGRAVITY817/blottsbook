@@ -5,4 +5,5 @@
   (println "Welcome to" what "!"))
 
 (defn -main []
-  (say-welcome "Blotts Books"))
+  (say-welcome "Blotts Books")
+  (say-welcome "Osan city"))
