@@ -19,4 +19,21 @@
   (println "We have a classic!"))
 (re-seq #"\w+" title) ;=> ("Pride" "and" "Prejudice" "and" "Zombies")
 
+;; Sum up the prices!
+(require '[blottsbooks.sequence :refer [books]])
+
+(defn total-price
+  "Total up book price"
+  [books]
+  (loop [books books total 0]
+    (if (empty? books)
+      total
+      (recur (next books)
+             (+ total (:price (first books)))))))
+(total-price books)
+;; Using map is better!
+(defn better-total-price [books]
+  (apply + (map :price books)))
+(better-total-price books)
+
 

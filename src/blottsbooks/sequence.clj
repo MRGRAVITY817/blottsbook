@@ -110,5 +110,19 @@ doubled ;=> (2 4 6 8)
     " - "
     (map :title (take 3 (reverse (sort-by :rating books)))))))
 
-(format-top-titles books) ;=> "Emma - Dracula - Deep Six"
+;; Equivalent
+(defn top-rated-titles [books]
+  (->>
+   books
+   (sort-by :rating)
+   reverse
+   (take 3)
+   (map :title)
+   (interpose " - ")
+   (apply str)))
+
+(format-top-titles books)
+(top-rated-titles books)
+;=> "Emma - Dracula - Deep Six"
+
 
