@@ -53,3 +53,30 @@
              :dates {:born 1775 :died  1817}})
 (let [{{dad :father mom :mother} :parents} austen]
   (println "Hello" mom "and" dad "!"))
+
+;; Reducing redundancy
+(def character-charlie {:name "Charlie Puth" :age 12 :gender :male})
+(let [{:keys [name age gender]} character-charlie]
+  (str "Name: " name  " Age: " age " Gender: " gender))
+
+(defn add-gretting [character]
+  (let [{:keys [name age]} character]
+    (assoc character
+           :greeting
+           (str "Hello, my name is " name " and I am " age "."))))
+
+(def greeted-charlie (add-gretting character-charlie))
+greeted-charlie
+
+;; Using `:as` to make above simple
+(defn assoc-gretting [{:keys [name age] :as character}]
+  (assoc character
+         :greeting
+         (str "Hello, my name is " name " and I am " age ".")))
+
+(def hello-charlie (assoc-gretting character-charlie))
+hello-charlie
+;=> {:name "Charlie Puth",
+;    :age 12,
+;    :gender :male,
+;    :greeting "Hello, my name is Charlie Puth and I am 12."}
