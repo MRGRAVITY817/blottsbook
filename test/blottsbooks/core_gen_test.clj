@@ -1,6 +1,9 @@
 (ns blottsbooks.core-gen-test
   (:require
-   [clojure.test.check.generators :as gen]))
+   [clojure.test.check.generators :as gen]
+   [clojure.test.check.properties :as prop]
+   [clojure.test.check :as tc]
+   [blottsbooks.core :as b]))
 
 (def title-gen-unbound gen/string-alphanumeric)
 (def copies-gen-unbound gen/pos-int)
@@ -26,3 +29,10 @@
     {:shelf bookshelf :book book}))
 
 (println :book shelf-and-book-gen)
+
+;; creating prop test
+(tc/quick-check ;; create 50 test
+ 50 (prop/for-all
+     [shelf-and-book shelf-and-book-gen]
+     (= (b/find-by-title (-> shelf-and-book :book :title) (:shelf shelf-and-book)) ;; actual
+        (:book shelf-and-book)))) ;; expected
