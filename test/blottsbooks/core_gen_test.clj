@@ -2,6 +2,7 @@
   (:require
    [clojure.test.check.generators :as gen]
    [clojure.test.check.properties :as prop]
+   [clojure.test.check.clojure-test :as ctest]
    [clojure.test.check :as tc]
    [blottsbooks.core :as b]))
 
@@ -36,3 +37,15 @@
      [shelf-and-book shelf-and-book-gen]
      (= (b/find-by-title (-> shelf-and-book :book :title) (:shelf shelf-and-book)) ;; actual
         (:book shelf-and-book)))) ;; expected
+
+;; Smooth Integration (automatically use quick-check)
+;; For all the bookshelf/book combinations,
+;; we care to generate, looking for a book in the bookshelf 
+;; with a given title should produce a book with that title.
+(ctest/defspec find-by-title-find-books 50
+  (prop/for-all
+   [shelf-and-book shelf-and-book-gen]
+   (= (b/find-by-title (-> shelf-and-book :book :title) (:shelf shelf-and-book))
+      (:book shelf-and-book))))
+
+(find-by-title-find-books)
