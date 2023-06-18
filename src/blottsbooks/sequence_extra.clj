@@ -36,4 +36,3 @@
   (apply + (map :price books)))
 (better-total-price books)
 
-
