@@ -62,6 +62,35 @@
 (full-name sofia) ;=> "Sofia Diego"
 (description sam) ;=> "Sam Waller is a character in The Pickwick Papers"
 
+;; You can extend protocol method, from outside.
+;; No need to touch original record code!
+(defprotocol Marketable
+  (make-slogan [this]))
+
+(extend-protocol Marketable
+  Employee
+  (make-slogan [e] (str (:first-name e) " is the Best Employee"))
+  FakeCharacter
+  (make-slogan [fc] (str (:name fc) " is the greatest character"))
+  SuperComputer
+  (make-slogan [sc] (str "This computer was produced in " (:production-year sc))))
+
+(make-slogan sam) ;=> "Sam Waller is the greatest character"
+
+;; You can also extend protocol for non-record types 
+(extend-protocol Marketable
+  String
+  (make-slogan [s] (str \" s \" " is a string!")))
+
+(make-slogan "This") ;=> "\"This\" is a string!"
+
+;; One-off implementation for protocol (when we don't want to create record)
+;; It doesn't require you to implement the whole protocol
+(def person-component
+  (reify Person
+    (full-name [this] (println "Name"))
+    (description [this] (println "This is person"))))
+
 
 
 
