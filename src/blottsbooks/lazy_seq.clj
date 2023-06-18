@@ -30,3 +30,24 @@
 (def test-books (map make-book titles authors))
 
 (nth test-books 3) ;=> {:author "Leo Poe", :title "Wheel of time, Book 4"}
+
+;; Lazy sequence, uses macro in itself
+(defn chatty-vector []
+  (println "Here we go!")
+  [1 2 3])
+(def s (lazy-seq (chatty-vector)))
+;; Lazy sequence will only get evaluated when we access the items
+(println s)
+
+(defn my-repeat [x]
+  (cons x (lazy-seq (my-repeat x))))
+
+(nth (my-repeat "1") 10)
+
+(defn my-iterate [f x]
+  (cons x (lazy-seq (my-iterate f (f x)))))
+
+(defn my-map [f col]
+  (when-not (empty? col)
+    (cons (f (first col))
+          (lazy-seq (my-map f (rest col))))))
