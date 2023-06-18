@@ -51,3 +51,25 @@
   (when-not (empty? col)
     (cons (f (first col))
           (lazy-seq (my-map f (rest col))))))
+
+;; Read file using slurp
+(def chap-numbers [1 2])
+
+(defn chapters [numbers]
+  (take 10
+        (map slurp
+             (map #(str "chap" % ".txt") numbers))))
+
+(defn f-chapters [numbers]
+  (->>
+   numbers
+   (map #(str "chap" % ".txt"))
+   (map slurp)
+   (take 2)))
+
+(chapters chap-numbers)
+(f-chapters chap-numbers)
+;; `doall` will evaluate all the items in lazy-seq
+(doall (f-chapters numbers))
+
+;; DO NOT sort or reduce the unbounded sequence!
