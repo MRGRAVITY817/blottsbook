@@ -7,10 +7,13 @@
    {:title "Emma" :author "Austen" :copies 10}
    {:title "Misery" :author "King" :copies 101}])
 
-(deftest test-basic-inventory
-  (testing "Finding books"
+;; You can run test in console with `lein test`
+(deftest test-basic-inventory ;; Test suite
+
+  (testing "Finding books"    ;; Test method
     (is (not (nil? (b/find-by-title "Emma" books))))
     (is (nil? (b/find-by-title "HARRY POTTER" books))))
+
   (testing "Copies in inventory"
     (is (= 10 (b/number-of-copies-of "Emma" books)))))
 
