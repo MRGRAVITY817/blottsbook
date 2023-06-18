@@ -1,7 +1,16 @@
 (ns blottsbooks.core-test
   (:require [clojure.test :refer :all]
-            [blottsbooks.core :refer :all]))
+            [blottsbooks.core :as b]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+(def books
+  [{:title "2001" :author "Clarke" :copies 21}
+   {:title "Emma" :author "Austen" :copies 10}
+   {:title "Misery" :author "King" :copies 101}])
+
+(deftest test-basic-inventory
+  (testing "Finding books"
+    (is (not (nil? (b/find-by-title "Emma" books))))
+    (is (nil? (b/find-by-title "HARRY POTTER" books))))
+  (testing "Copies in inventory"
+    (is (= 10 (b/number-of-copies-of "Emma" books)))))
+
