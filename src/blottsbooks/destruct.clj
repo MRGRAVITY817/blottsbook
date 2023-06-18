@@ -80,3 +80,17 @@ hello-charlie
 ;    :age 12,
 ;    :gender :male,
 ;    :greeting "Hello, my name is Charlie Puth and I am 12."}
+
+;; Sometimes it's unwise to destructure nested data
+(def readers
+  [{:name "Charlie", :fav-book {:title "Carrie", :author ["Stephen" "King"]}}
+   {:name "Jennifer", :fav-book {:title "Emma", :author ["Jane" "Austen"]}}])
+;; BAD - hard to understand
+(let [[_ {{[fname lname] :author} :fav-book}] readers]
+  (str fname " " lname))
+;; GOOD - easy to follow nested data
+(let [[_ second-reader] readers]
+  (let [author (-> second-reader :fav-book :author)]
+    (str (first author) " " (second author))))
+
+
