@@ -19,5 +19,37 @@
    #(binding [*favorite-book* "Emma"]
       (println "My favorite book is" *favorite-book*))))
 
+;; Use .start to start thread process
 (.start thread-1)
 (.start thread-2)
+
+;; Use .join to wait for thread process
+(.join thread-1)
+
+;; To return value from thread, create promise.
+(def the-result (promise))
+(deliver the-result "Emma")
+;; Get promise value with `deref`
+(println "The value in my promise is" (deref the-result))
+;; Using @
+(println "The value in my promise is" @the-result)
+
+;; Run calculations in separate thread
+
+(def inventory
+  [{:title "Emma" :sold 51 :revenue 255}
+   {:title "2001" :sold 17 :revenue 170}])
+
+(defn sum-sold  [inv]
+  (apply + (map :sold inv)))
+
+(defn sum-revenue [inv]
+  (apply + (map :revenue inv)))
+
+(let [sold-promise (promise)
+      revenue-promise (promise)]
+  (.start (Thread. #(deliver sold-promise (sum-sold inventory))))
+  (.start (Thread. #(deliver revenue-promise (sum-revenue inventory))))
+  ;; main thread waits for these processes
+  (println "Total number of books sold is" @sold-promise)
+  (println "Total revenue is" @revenue-promise))
