@@ -53,3 +53,34 @@
   ;; main thread waits for these processes
   (println "Total number of books sold is" @sold-promise)
   (println "Total revenue is" @revenue-promise))
+
+;; The process above is much easier with `future`
+;; future creates promise and run on separate thread
+(let [inv inventory
+      sold-future (future (sum-sold inv))
+      revenue-future (future (sum-revenue inv))]
+  (println "Total number of books sold is" @sold-future)
+  (println "Total revenue is" @revenue-future))
+
+;; We can limit the number of threads, by creating thread pools
+(import java.util.concurrent.Executors)
+
+(def fixed-pool (Executors/newFixedThreadPool 3))
+
+(defn a-lot-of-work []
+  (println "Simulating function that takes a long time")
+  (Thread/sleep 1000))
+
+(defn even-more-work []
+  (println "Simulating function that takes a long time.")
+  (Thread/sleep 1000))
+
+(.execute fixed-pool a-lot-of-work)
+(.execute fixed-pool even-more-work)
+(.execute fixed-pool even-more-work)
+(.execute fixed-pool even-more-work)
+
+;; Give a timeout when dereferencing long-taking future (in production)
+(let [inv inventory
+      sold-future (future (sum-sold inv))]
+  (println "Book sold" (deref sold-future 500 :oh-snap)))
