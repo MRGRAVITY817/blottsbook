@@ -75,3 +75,29 @@
  ::movie
  {:title "Tenet" :director "Christopher Nolan" :earning 123})
 ;=> {:title "Tenet", :director "Christopher Nolan", :earning 123}
+
+;; Function pre/post conditions
+(s/def ::box-office (s/coll-of ::movie))
+
+(defn find-by-title-complex
+  [title box-office]
+  {:pre [(s/valid? ::title title)
+         (s/valid? ::box-office box-office)]}
+  (some #(when (= (:title %) title) %) box-office))
+
+;; More concise version
+(s/fdef find-by-title
+  :args ;; check function args spec
+  (s/cat :title ::title
+         :box-office ::box-office))
+
+(defn find-by-title
+  [title box-office]
+  (some #(when (= (:title %) title) %) box-office))
+
+(require '[clojure.spec.test.alpha :as st])
+
+;; To spec-check, we have to explicitly instrument it
+(st/instrument 'blottsbooks.spec/find-by-title)
+
+(find-by-title "Emma" [{:title "Emma" :director "Chris" :earning 12}])
