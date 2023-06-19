@@ -61,4 +61,17 @@
  {:title "Tenet" :director "Christopher Nolan" :earning "123"})
 ;=> false
 
+;; Get explanation for why value does/doesn't match
+(s/explain
+ ::movie
+ {:title "Tenet" :director :christopher :earning "123"})
 
+;; Return invalid/original data by match
+(s/conform
+ ::movie
+ {:title "Tenet" :director :christopher :earning "123"})
+;=> :clojure.spec.alpha/invalid
+(s/conform
+ ::movie
+ {:title "Tenet" :director "Christopher Nolan" :earning 123})
+;=> {:title "Tenet", :director "Christopher Nolan", :earning 123}
