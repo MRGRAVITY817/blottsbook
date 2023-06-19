@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/test.check "0.10.0"]
                  [korma "0.4.0"]]
+  :plugins [[cider/cider-nrepl "0.24.0"]]
   :main ^:skip-aot blottsbooks.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all
