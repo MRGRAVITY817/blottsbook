@@ -6,6 +6,7 @@
 (s/valid? number? 44) ;=> true
 (s/valid? number? :hello)
 
+;; Should be number "and" bigger than 10
 (def n-gt-10 (s/and number? #(> % 10)))
 (s/valid? n-gt-10 1)
 (s/valid? n-gt-10 10)
@@ -101,3 +102,17 @@
 (st/instrument 'blottsbooks.spec/find-by-title)
 
 (find-by-title "Emma" [{:title "Emma" :director "Chris" :earning 12}])
+
+;; Spec-driven tests
+(defn movie-blurb [movie]
+  (str "The best movie " (:title movie) " by " (:author movie)))
+
+(s/fdef movie-blurb
+  :args (s/cat :movie ::movie)
+  :ret (s/and  ;; return value should... 
+        string? ;; be string `and`
+        (partial re-find #"The best movie") ;; contains "The best movie"
+        ))
+
+;; Execute 1000 generated tests
+(st/check 'blottsbooks.spec/movie-blurb)
