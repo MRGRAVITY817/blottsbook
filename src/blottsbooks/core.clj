@@ -1,5 +1,12 @@
 (ns blottsbooks.core
-  (:gen-class))
+  (:gen-class)
+  (:require
+   [clojure.spec.alpha :as s]))
+
+(s/def :blottsbooks.core/book
+  (s/keys
+   :req-un
+   [:blottsbooks.core/title :blottsbooks.core/author :blottsbooks.core/copies]))
 
 (defn say-welcome [what]
   (println "Welcome to" what "!"))

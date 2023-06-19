@@ -40,3 +40,25 @@
 
 (s/valid? book-s {:title "Emma" :author "Austen" :copies 10})
 
+;; Validating map with globally registered spec
+(s/valid?
+ :blottsbooks.core/book ; this one's defined in core.clj
+ {:title "Dracula" :author "Stoker" :copies 19})
+
+;; Conveniently defining spec 
+(s/def ::movie (s/keys :req-un [::title ::director ::earning]))
+(s/def ::title string?)
+(s/def ::director string?)
+(s/def ::earning int?)
+
+(s/valid?
+ ::movie
+ {:title "Tenet" :director "Christopher Nolan" :earning 123})
+;=> true
+
+(s/valid?
+ ::movie
+ {:title "Tenet" :director "Christopher Nolan" :earning "123"})
+;=> false
+
+
