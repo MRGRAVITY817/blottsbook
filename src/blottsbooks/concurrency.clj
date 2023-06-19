@@ -84,3 +84,14 @@
 (let [inv inventory
       sold-future (future (sum-sold inv))]
   (println "Book sold" (deref sold-future 500 :oh-snap)))
+
+;; Parallel map!
+(pmap #(println "Number" %) [1 2 3 4 5 6 7 8]) ;; should run random
+;; Above is somehow same as...
+(let [futures
+      (doall
+       (map #(future (println "Number" %)) [1 2 3 4 5 6 7 8]))]
+  (map deref futures))
+
+;; Actually pmap is slower for light computation.
+;; Because it takes time to create threads.
