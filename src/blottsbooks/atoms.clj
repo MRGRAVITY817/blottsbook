@@ -47,6 +47,13 @@
 ;; Agent, creates it's own queue, and pushes processes with `send`
 (def by-director (agent {}))
 
+;; If agent process fails, restart agent
+(if (agent-error by-director)
+  (restart-agent
+   by-director
+   {}
+   :clear-actions true))
+
 (defn add-movie [{director :director :as movie}]
   (send
    by-director
@@ -56,3 +63,14 @@
      ;; No redundant notifications anymore!
      (println "Added movie")
      (assoc by-director-map movie director))))
+
+;; Shutdown all the agents 
+(shutdown-agents)
+
+;; TIPS
+;; 1. Use var, when the value would be stable across local/thread
+;; 2. Use ref, when we have numbers of mutable values that has to 
+;;    be updated together.
+;; 3. Use agent, when we need to put some side-effect
+;; 4. Use atom, when it's side-effect-free and doesn't contain 
+;;    any multiple values.
