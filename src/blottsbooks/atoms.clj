@@ -41,3 +41,18 @@
   (dosync ;; dosync guarantees that inner procedures are atomic
    (alter by-name #(assoc % name channel))
    (alter total-subscriber + (:subscribers channel))))
+
+;; Atoms and Refs will run again when there's conflict for updating value.
+;; Hence putting side-effect logic in swap! or alter isn't a good solution.
+;; Agent, creates it's own queue, and pushes processes with `send`
+(def by-director (agent {}))
+
+(defn add-movie [{director :director :as movie}]
+  (send
+   by-director
+   (fn [by-director-map]
+     ;; even though the event is still in the queue,
+     ;; it will immediately print this.
+     ;; No redundant notifications anymore!
+     (println "Added movie")
+     (assoc by-director-map movie director))))
